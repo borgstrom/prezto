@@ -5,10 +5,15 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# Use the vim binary from our MacVim copy so we have a more recent version
+# as its required by youcompleteme
+alias vi='/Applications/MacVim.app/Contents/MacOS/Vim'
+alias vim='/Applications/MacVim.app/Contents/MacOS/Vim'
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Customize to your needs...
-
+# Do not share our history between sessions
+unset SHARE_HISTORY
