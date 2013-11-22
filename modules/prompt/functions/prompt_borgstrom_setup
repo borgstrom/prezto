@@ -1,0 +1,68 @@
+#
+# @borgstrom's prompt - based on Sorin's
+#
+# Authors:
+#   Evan Borgstrom <http://github.com/borgstrom>
+#
+# Screenshots:
+#   TODO
+#
+
+function prompt_borgstrom_precmd {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+
+  # Get Git repository information.
+  if (( $+functions[git-info] )); then
+    git-info
+  fi
+
+  if (( $+functions[python-info] )); then
+    python-info
+  fi
+}
+
+function prompt_borgstrom_setup {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+  prompt_opts=(cr percent subst)
+
+  # Load required functions.
+  autoload -Uz add-zsh-hook
+
+  # Pre command hook
+  add-zsh-hook precmd prompt_borgstrom_precmd
+
+  # Set editor-info parameters.
+  zstyle ':prezto:module:editor:info:completing' format '%F{magenta}…%f'
+  zstyle ':prezto:module:editor:info:keymap:primary' format '❯❯'
+  zstyle ':prezto:module:editor:info:keymap:primary:insert' format '❯'
+  zstyle ':prezto:module:editor:info:keymap:primary:overwrite' format '↓'
+  zstyle ':prezto:module:editor:info:keymap:alternate' format '●❯❯'
+
+  # Set git-info parameters.
+  zstyle ':prezto:module:git:info:action' format ':%%B%F{yellow}%s%f%%b'
+  zstyle ':prezto:module:git:info:ahead' format '%%B%F{yellow}⬆%f%%b'
+  zstyle ':prezto:module:git:info:behind' format '%%B%F{yellow}⬇%f%%b'
+  zstyle ':prezto:module:git:info:branch' format ':%F{green}%b%f'
+  zstyle ':prezto:module:git:info:clean' format '%F{green}✓%f'
+  zstyle ':prezto:module:git:info:dirty' format '%F{red}✖%f'
+  zstyle ':prezto:module:git:info:position' format ':%F{red}%p%f'
+  zstyle ':prezto:module:git:info:keys' format \
+    'prompt' ' %F{blue}git%f$(coalesce "%b" "%p" "%c")%s[%A%B%C%D]'
+
+  # %v - virtualenv name.
+  zstyle ':prezto:module:python:info:virtualenv' format ' %F{blue}venv%f:%F{green}%v%f'
+
+  # Define prompts.
+  PROMPT='
+%F{yellow}%n@%m%f$python_info[virtualenv]${git_info:+${(e)git_info[prompt]}} %F{cyan}%~%f
+[%h] ${editor_info[overwrite]}${editor_info[keymap]} '
+  RPROMPT=''
+
+  SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
+}
+
+prompt_borgstrom_setup "$@"
+
+# vim: set sw=2 sws=2 ts=2 et :
